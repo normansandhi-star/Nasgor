@@ -176,15 +176,9 @@ menuList.forEach((m)=>{
 });
     
     // auto pilih menu pertama
-document.querySelectorAll(".card")[0].click();
-
-    // tampilkan varian hanya untuk nasgor
-    document.getElementById("varianWrap").style.display =
-      (m.nama === "Nasi Goreng") ? "block" : "none";
-  }
-
-  document.getElementById("menu").appendChild(el);
-});
+setTimeout(()=>{
+  document.querySelectorAll(".card")[0].click();
+}, 100);
 
 // PEDAS
 pedasList.forEach((p,i)=>{
@@ -321,7 +315,7 @@ function kirimWA(){
   // 🔥 WA
   window.open("https://wa.me/6285708368706?text="+encodeURIComponent(text));
 
-  alert("Pesanan dikirim 🚀");
+  alert("🔥 Pilihan kamu mantap! Tinggal tambah ke keranjang");
 }
 
 </script>
