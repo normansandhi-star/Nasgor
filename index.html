@@ -82,8 +82,8 @@ h1{text-align:center;}
 
 <div id="menu"></div>
 
-<!-- VARIAN KHUSUS NASGOR -->
-<div id="varianWrap">
+<!-- VARIAN -->
+<div id="varianWrap" style="display:none;">
 <h3>Varian (khusus Nasi Goreng)</h3>
 <select id="varian">
   <option>Kecap</option>
@@ -101,9 +101,9 @@ h1{text-align:center;}
 
 <!-- QTY -->
 <div class="qty">
-<button onclick="qty-- ; updateQty()">-</button>
+<button onclick="qty--;updateQty()">-</button>
 <span id="qty">1</span>
-<button onclick="qty++ ; updateQty()">+</button>
+<button onclick="qty++;updateQty()">+</button>
 </div>
 
 <button class="btn" onclick="tambahItem()">+ Tambah ke Keranjang</button>
@@ -115,7 +115,7 @@ h1{text-align:center;}
 <h2 id="total">Total: Rp0</h2>
 
 <!-- QR -->
-<div style="text-align:center; margin-top:20px;">
+<div style="text-align:center;margin-top:20px;">
 <h3 style="color:#22c55e;">🔥 Scan & Bayar</h3>
 <img src="https://i.ibb.co.com/yc6swKvP/IMG-20260403-WA0007.jpg"
 style="width:220px;border-radius:12px;">
@@ -130,8 +130,6 @@ Saya Sudah Bayar
 </div>
 
 <script>
-
-document.getElementById("varianWrap").style.display = "none";
 
 // ===== STATE =====
 let currentMenu = "";
@@ -151,38 +149,34 @@ const menuList = [
 const pedasList = ["0","1","2","3🔥","4🔥🔥"];
 const toppingList = ["Dadar","Ceplok","Kerupuk"];
 
-// ===== INIT =====
+// ===== INIT MENU (ANTI BUG) =====
 menuList.forEach((m)=>{
-  let el = document.createElement("div");
+  const el = document.createElement("div");
   el.className = "card";
   el.innerHTML = `${m.nama} - Rp${m.harga}`;
 
-  el.addEventListener("click", function(){
-
-    document.querySelectorAll(".card")
-      .forEach(c=>c.classList.remove("active"));
-
+  el.addEventListener("click", ()=>{
+    document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
     el.classList.add("active");
 
     currentMenu = m.nama;
     currentHarga = m.harga;
 
-    // tampilkan varian hanya untuk nasgor
     document.getElementById("varianWrap").style.display =
-      (m.nama === "Nasi Goreng") ? "block" : "none";
+      (m.nama==="Nasi Goreng") ? "block" : "none";
   });
 
   document.getElementById("menu").appendChild(el);
 });
-    
-    // auto pilih menu pertama
+
+// auto pilih menu pertama
 setTimeout(()=>{
   document.querySelectorAll(".card")[0].click();
-}, 100);
+},100);
 
-// PEDAS
+// ===== PEDAS =====
 pedasList.forEach((p,i)=>{
-  let b = document.createElement("button");
+  const b = document.createElement("button");
   b.className="pedas-btn";
   b.innerText=p;
 
@@ -192,26 +186,26 @@ pedasList.forEach((p,i)=>{
     currentPedas=i;
     document.querySelectorAll(".pedas-btn").forEach(x=>x.classList.remove("active"));
     b.classList.add("active");
-  }
+  };
 
   document.getElementById("pedasWrap").appendChild(b);
 });
 
-// TOPPING
+// ===== TOPPING =====
 toppingList.forEach(t=>{
-  let b=document.createElement("button");
+  const b=document.createElement("button");
   b.className="top-btn";
   b.innerText=t;
 
   b.onclick=()=>{
     if(currentTopping.includes(t)){
-      currentTopping=currentTopping.filter(x=>x!=t);
+      currentTopping=currentTopping.filter(x=>x!==t);
       b.classList.remove("active");
     } else {
       currentTopping.push(t);
       b.classList.add("active");
     }
-  }
+  };
 
   document.getElementById("topWrap").appendChild(b);
 });
@@ -235,7 +229,7 @@ function tambahItem(){
   cart.push({
     menu: currentMenu,
     harga: (currentHarga + toppingHarga) * qty,
-    varian: (currentMenu==="Nasi Goreng") ? document.getElementById("varian").value : "-",
+    varian: currentMenu==="Nasi Goreng" ? document.getElementById("varian").value : "-",
     pedas: currentPedas,
     topping: [...currentTopping],
     qty: qty
@@ -248,6 +242,8 @@ function tambahItem(){
   qty=1;
   updateQty();
   document.querySelectorAll(".top-btn").forEach(x=>x.classList.remove("active"));
+
+  alert("✅ Masuk keranjang");
 }
 
 // ===== RENDER =====
@@ -260,7 +256,7 @@ function renderCart(){
   cart.forEach((item,i)=>{
     total += item.harga;
 
-    let div=document.createElement("div");
+    const div=document.createElement("div");
     div.innerHTML=`
     ${i+1}. ${item.menu} x${item.qty}<br>
     Varian: ${item.varian}<br>
@@ -296,26 +292,19 @@ function kirimWA(){
   let total = cart.reduce((a,b)=>a+b.harga,0);
   text+=`Total: Rp${total}\n\nAlamat:\n`;
 
-  // 🔥 KIRIM KE SHEETS
+  // 🔥 SHEETS
   fetch("https://script.google.com/macros/s/AKfycbxuEQ8Fvo-H4tiTHYEv7xE0Y0D_eynmhepRgVmuN9nsprELq5QGDUiRztPgx2ia3vc/exec", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    nama: "-",
-    pesanan: text,
-    total: total,
-    alamat: "-"
-  })
-})
-  .then(()=>console.log("Masuk Sheets ✔️"))
-  .catch(err=>console.error("Error:",err));
+    method:"POST",
+    body: JSON.stringify({
+      pesanan: text,
+      total: total
+    })
+  });
 
   // 🔥 WA
   window.open("https://wa.me/6285708368706?text="+encodeURIComponent(text));
 
-  alert("🔥 Pilihan kamu mantap! Tinggal tambah ke keranjang");
+  alert("🚀 Pesanan dikirim!");
 }
 
 </script>
