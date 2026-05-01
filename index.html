@@ -152,17 +152,28 @@ const pedasList = ["0","1","2","3🔥","4🔥🔥"];
 const toppingList = ["Dadar","Ceplok","Kerupuk"];
 
 // ===== INIT =====
-menuList.forEach(m=>{
+menuList.forEach((m)=>{
   let el = document.createElement("div");
-  el.className="card";
+  el.className = "card";
   el.innerHTML = `${m.nama} - Rp${m.harga}`;
 
-  el.onclick=()=>{
-    document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+  el.addEventListener("click", function(){
+
+    document.querySelectorAll(".card")
+      .forEach(c=>c.classList.remove("active"));
+
     el.classList.add("active");
 
     currentMenu = m.nama;
     currentHarga = m.harga;
+
+    // tampilkan varian hanya untuk nasgor
+    document.getElementById("varianWrap").style.display =
+      (m.nama === "Nasi Goreng") ? "block" : "none";
+  });
+
+  document.getElementById("menu").appendChild(el);
+});
     
     // auto pilih menu pertama
 document.querySelectorAll(".card")[0].click();
