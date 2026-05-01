@@ -293,13 +293,18 @@ function kirimWA(){
   text+=`Total: Rp${total}\n\nAlamat:\n`;
 
   // 🔥 SHEETS
-  fetch("https://script.google.com/macros/s/AKfycbxuEQ8Fvo-H4tiTHYEv7xE0Y0D_eynmhepRgVmuN9nsprELq5QGDUiRztPgx2ia3vc/exec", {
-    method:"POST",
-    body: JSON.stringify({
-      pesanan: text,
-      total: total
-    })
-  });
+  fetch("https://script.google.com/macros/s/AKfycbyY3xZeIeRpOO5mCnNzNAgsRji-waE_fub02hC5WMe6yWf3-vSa8DKNMP1bOtMJkGow/exec", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    nama: "-",
+    pesanan: text,
+    total: total,
+    alamat: "-"
+  })
+})
 
   // 🔥 WA
   window.open("https://wa.me/6285708368706?text="+encodeURIComponent(text));
