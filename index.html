@@ -305,6 +305,9 @@ function kirimWA(){
     alamat: "-"
   })
 })
+.then(res => res.text())
+.then(res => console.log("Sheets:", res))
+.catch(err => console.error(err));
 
   // 🔥 WA
   window.open("https://wa.me/6285162554856?text="+encodeURIComponent(text));
