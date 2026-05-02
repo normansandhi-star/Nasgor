@@ -279,42 +279,48 @@ function kirimWA(){
     return;
   }
 
-  let text="Halo Pak Zaki 🙌\n\nSaya pesan:\n\n";
+  let text = "Halo Pak Zaki 🙌\n\nSaya pesan:\n\n";
 
   cart.forEach((item,i)=>{
-    text+=`${i+1}. ${item.menu} x${item.qty}\n`;
-    text+=`Varian: ${item.varian}\n`;
-    text+=`Pedas: ${item.pedas}\n`;
-    text+=`Topping: ${item.topping.join(", ") || "-"}\n`;
-    text+=`Rp${item.harga}\n\n`;
+    text += `${i+1}. ${item.menu} x${item.qty}\n`;
+    text += `Varian: ${item.varian}\n`;
+    text += `Pedas: ${item.pedas}\n`;
+    text += `Topping: ${item.topping.join(", ") || "-"}\n`;
+    text += `Rp${item.harga}\n\n`;
   });
 
   let total = cart.reduce((a,b)=>a+b.harga,0);
-  text+=`Total: Rp${total}\n\nAlamat:\n`;
 
-  // 🔥 SHEETS
+  // KIRIM KE SHEETS
   fetch("https://script.google.com/macros/s/AKfycbw2mkeIIXNzCcoCtZVSUi1Lw6_qopAglqbodsb95TSJKrUUlerdKouCkhsLKcp5uT-a/exec", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    nama: "-",
-    pesanan: text,
-    total: total,
-    alamat: "-"
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain"
+    },
+    body: JSON.stringify({
+      nama: "Customer",
+      pesanan: text,
+      total: total,
+      alamat: "-"
+    })
   })
-})
-.then(res => res.text())
-.then(res => console.log("Sheets:", res))
-.catch(err => console.error(err));
+  .then(res=>res.text())
+  .then(data=>{
+    console.log("Sheets:", data);
 
-  // 🔥 WA
-  window.open("https://wa.me/6285162554856?text="+encodeURIComponent(text));
+    // setelah berhasil baru buka WA
+    window.open(
+      "https://wa.me/6285708368706?text="+encodeURIComponent(text)
+    );
 
-  alert("🚀 Pesanan dikirim!");
+    alert("Pesanan berhasil dikirim 🚀");
+  })
+  .catch(err=>{
+    alert("Gagal kirim ke Sheets");
+    console.error(err);
+  });
+
 }
-
 </script>
 
 </body>
