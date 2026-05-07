@@ -272,6 +272,7 @@ function renderCart(){
 }
 
 // ===== KIRIM =====
+<script>
 function kirimWA(){
 
   if(cart.length===0){
@@ -291,28 +292,32 @@ function kirimWA(){
 
   let total = cart.reduce((a,b)=>a+b.harga,0);
 
-  // KIRIM KE SHEETS
+  // Kirim ke Google Sheets
   fetch("https://script.google.com/macros/s/AKfycbyKM008NlZ4XAPlNsW02a-TU_cE7QD93SN9WbKvNQV4uzzjbQy09nWn_OkfPzZ7qEZY/exec", {
     method: "POST",
     headers: {
       "Content-Type": "text/plain"
     },
     body: JSON.stringify({
-    body: JSON.stringify(data)
-})
-.then(res => res.text())
-.then(res => {
-  console.log("Sheets OK:", res);
+      nama: "Customer",
+      pesanan: text,
+      total: total,
+      alamat: "-"
+    })
+  })
+  .then(res => res.text())
+  .then(res => {
+    console.log("Sheets OK:", res);
 
-  // Tetap buka WhatsApp
-  window.location.href = "https://wa.me/6285162554856?text=Halo%20Pak%20Zaki%20saya%20sudah%20bayar";
-})
-.catch(err => {
-  console.log("Sheets error:", err);
+    window.location.href =
+      "https://wa.me/6285162554856?text=" + encodeURIComponent(text);
+  })
+  .catch(err => {
+    console.log("Sheets Error:", err);
 
-  // Walau Sheets error, WA tetap buka
-  window.location.href = "https://wa.me/6285162554856?text=Halo%20Pak%20Zaki%20saya%20sudah%20bayar";
-});
+    window.location.href =
+      "https://wa.me/6285162554856?text=" + encodeURIComponent(text);
+  });
 
 }
 </script>
