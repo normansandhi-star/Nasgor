@@ -334,46 +334,46 @@ function kirimWA(){
   let total =
     cart.reduce((a,b)=>a+b.harga,0);
 
-  fetch("https://script.google.com/macros/s/AKfycbxfjNXdVK648IPqVsOEpFZ5nMQ5kmNZyeZbaYIWLfLRCzFXIzpz76zX7dX0XaTJCT0O/exec",{
+  fetch("https://script.google.com/macros/s/AKfycbyKM008NlZ4XAPlNsW02a-TU_cE7QD93SN9WbKvNQV4uzzjbQy09nWn_OkfPzZ7qEZY/exec", {
+  method: "POST",
 
-    method:"POST",
+  headers: {
+    "Content-Type": "text/plain"
+  },
 
-    headers:{
-      "Content-Type":"text/plain"
-    },
-
-    body: JSON.stringify({
-
-      nama:"Customer",
-
-      pesanan:text,
-
-      total:total,
-
-      alamat:"-"
-
-    })
-
+  body: JSON.stringify({
+    nama: "Customer",
+    pesanan: text,
+    total: total,
+    alamat: "-"
   })
 
-  .then(res=>res.text())
+})
 
-  .then(()=>{
+.then(res => res.text())
+
+.then(result => {
+
+  // DEBUG
+  alert("RESPON SHEETS: " + result);
+
+  // kalau sukses baru ke WA
+  if(result.includes("OK")){
 
     window.location.href =
-      "https://wa.me/6285162554856?text="
-      + encodeURIComponent(text);
+      "https://wa.me/6285708368706?text=" +
+      encodeURIComponent(text);
 
-  })
+  }
 
-  .catch(()=>{
+})
 
-    window.location.href =
-      "https://wa.me/6285162554856?text="
-      + encodeURIComponent(text);
+.catch(err => {
 
-  });
+  // DEBUG ERROR
+  alert("ERROR SHEETS: " + err);
 
+});
 }
 
 </script> 
