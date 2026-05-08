@@ -335,19 +335,21 @@ function kirimWA(){
     cart.reduce((a,b)=>a+b.harga,0);
 
   fetch("https://script.google.com/macros/s/AKfycbyKM008NlZ4XAPlNsW02a-TU_cE7QD93SN9WbKvNQV4uzzjbQy09nWn_OkfPzZ7qEZY/exec", {
-  method: "POST",
+  method:"POST",
+  mode:"no-cors",
 
-    mode: "no-cors",
-headers: {
-  "Content-Type": "text/plain"
-}
+  headers:{
+    "Content-Type":"text/plain"
+  },
 
   body: JSON.stringify({
-    nama: "Customer",
-    pesanan: text,
-    total: total,
-    alamat: "-"
+    nama:"Customer",
+    pesanan:text,
+    total:total,
+    alamat:"-"
   })
+
+})
 
 })
 
