@@ -318,54 +318,43 @@ function kirimWA(){
     return;
   }
 
-  let text =
-    "Halo Pak Zaki 🙌\n\nSaya pesan:\n\n";
+  let text = "Halo Pak Zaki 🙌\n\nSaya pesan:\n\n";
 
   cart.forEach((item,i)=>{
-
     text += `${i+1}. ${item.menu} x${item.qty}\n`;
     text += `Varian: ${item.varian}\n`;
     text += `Pedas: ${item.pedas}\n`;
     text += `Topping: ${item.topping.join(", ") || "-"}\n`;
     text += `Rp${item.harga}\n\n`;
-
   });
 
-  let total =
-    cart.reduce((a,b)=>a+b.harga,0);
+  let total = cart.reduce((a,b)=>a+b.harga,0);
 
   fetch("https://script.google.com/macros/s/AKfycbyKM008NlZ4XAPlNsW02a-TU_cE7QD93SN9WbKvNQV4uzzjbQy09nWn_OkfPzZ7qEZY/exec", {
-  method:"POST",
-  mode:"no-cors",
-
-  headers:{
-    "Content-Type":"text/plain"
-  },
-
-  body: JSON.stringify({
-    nama:"Customer",
-    pesanan:text,
-    total:total,
-    alamat:"-"
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "text/plain"
+    },
+    body: JSON.stringify({
+      nama: "Customer",
+      pesanan: text,
+      total: total,
+      alamat: "-"
+    })
   })
 
-})
+  .finally(() => {
 
-.then(res => res.text())
-
-.then(result => {
-
-  // DEBUG
-  alert("RESPON SHEETS: " + result);
-
-  // kalau sukses baru ke WA
-  if(result.includes("OK")){
+    alert("Order diproses ✅");
 
     window.location.href =
       "https://wa.me/6285708368706?text=" +
       encodeURIComponent(text);
 
-  }
+  });
+
+}
 
 })
 
