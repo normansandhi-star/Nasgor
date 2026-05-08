@@ -337,9 +337,10 @@ function kirimWA(){
   fetch("https://script.google.com/macros/s/AKfycbyKM008NlZ4XAPlNsW02a-TU_cE7QD93SN9WbKvNQV4uzzjbQy09nWn_OkfPzZ7qEZY/exec", {
   method: "POST",
 
-  headers: {
-    "Content-Type": "text/plain"
-  },
+    mode: "no-cors",
+headers: {
+  "Content-Type": "text/plain"
+}
 
   body: JSON.stringify({
     nama: "Customer",
